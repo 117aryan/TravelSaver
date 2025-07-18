@@ -6,70 +6,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Travel Savings Tracker</title>
   <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
+    :root {
+      --primary: #007bff;
+      --bg: #f2f2f7;
+      --text: #222;
+      --card-bg: #ffffff;
+      --accent: #e8f0fe;
+      --danger: #dc3545;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background-color: #f5f7fa;
-      color: #333;
+    }
+
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 1rem;
     }
 
     .container {
-      max-width: 500px;
-      margin: 2rem auto;
-      background-color: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: auto;
     }
 
-    h1 {
-      text-align: center;
-      color: #007bff;
+    .card {
+      background-color: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
       margin-bottom: 1.5rem;
+      text-align: center;
     }
 
-    label {
-      display: block;
-      margin-top: 1rem;
+    .card h2 {
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 2rem;
       font-weight: bold;
     }
 
-    input[type="number"],
-    input[type="date"],
-    input[type="text"],
-    select {
+    label,
+    input,
+    select,
+    button {
+      display: block;
       width: 100%;
-      padding: 0.6rem 0.8rem;
-      margin-top: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-      appearance: none;
-      background-color: white;
-      background-position: right 0.75rem center;
-      background-repeat: no-repeat;
-      background-size: 16px;
-      box-sizing: border-box;
+      margin-top: 1rem;
     }
 
-    input[type="date"] {
-      background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="gray" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10h5v5H7z" opacity=".3"/><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zm0-13H5V6h14v1z"/></svg>');
-    }
-
+    input,
     select {
-      background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="gray" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      padding: 0.75rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      background-color: white;
     }
 
     button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.75rem;
-      background-color: #007bff;
-      border: none;
+      padding: 0.9rem;
+      background: var(--primary);
       color: white;
+      border: none;
       font-size: 1rem;
-      border-radius: 8px;
+      border-radius: 12px;
+      margin-top: 1.5rem;
       cursor: pointer;
     }
 
@@ -77,55 +86,38 @@
       background-color: #0056b3;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 2rem;
-    }
-
-    th,
-    td {
-      border-bottom: 1px solid #ddd;
-      padding: 0.75rem;
-      text-align: center;
-    }
-
-    th {
-      background-color: #f0f0f0;
-      font-weight: bold;
+    .list-entry {
+      background: var(--accent);
+      border-radius: 14px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
 
     .delete-btn {
-      background-color: #dc3545;
+      background-color: var(--danger);
       color: white;
       border: none;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
       cursor: pointer;
-    }
-
-    .delete-btn:hover {
-      background-color: #b02a37;
-    }
-
-    .total {
-      text-align: right;
-      margin-top: 1rem;
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-
-    #customTypeGroup {
-      display: none;
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>Travel Savings Tracker</h1>
+    <div class="card">
+      <h2>Total Saved</h2>
+      <p id="totalDisplay">₹0</p>
+    </div>
+
     <label for="amount">Amount Saved (₹)</label>
-    <input type="number" id="amount" placeholder="Enter amount saved">
+    <input type="number" id="amount">
 
     <label for="date">Date</label>
     <input type="date" id="date">
@@ -139,30 +131,20 @@
       <option value="custom">Custom</option>
     </select>
 
-    <div id="customTypeGroup">
+    <div id="customTypeGroup" style="display: none;">
       <label for="customType">Custom Type</label>
-      <input type="text" id="customType" placeholder="Enter custom travel type">
+      <input type="text" id="customType">
     </div>
 
     <button onclick="addEntry()">Add Entry</button>
 
-    <table id="savingsTable">
-      <thead>
-        <tr>
-          <th>Amount (₹)</th>
-          <th>Date</th>
-          <th>Type</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <div class="total" id="totalDisplay">Total Saved: ₹0</div>
+    <div id="entries"></div>
   </div>
 
   <script>
-    const tableBody = document.querySelector("#savingsTable tbody");
+    let total = 0;
+    const entries = JSON.parse(localStorage.getItem("savingsData") || "[]");
+    const entriesDiv = document.getElementById("entries");
     const totalDisplay = document.getElementById("totalDisplay");
 
     function toggleCustomType() {
@@ -176,44 +158,59 @@
       const type = document.getElementById("type").value;
       const customType = document.getElementById("customType").value;
 
-      if (!amount || !dateInput || !type || (type === "custom" && !customType)) {
-        alert("Please fill all fields.");
+      if (isNaN(amount) || amount <= 0 || !dateInput || !type || (type === "custom" && !customType)) {
+        alert("Please fill all fields correctly.");
         return;
       }
 
-      const date = new Date(dateInput);
-      const formattedDate = date.toLocaleDateString("en-GB");
       const travelType = type === "custom" ? customType : type;
+      const entry = {
+        amount,
+        date: new Date(dateInput).toLocaleDateString("en-GB"),
+        type: travelType
+      };
 
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>₹${amount}</td>
-        <td>${formattedDate}</td>
-        <td>${travelType}</td>
-        <td><button class="delete-btn" onclick="deleteRow(this, ${amount})">Delete</button></td>
-      `;
+      entries.push(entry);
+      localStorage.setItem("savingsData", JSON.stringify(entries));
+      renderAll();
 
-      tableBody.appendChild(row);
-      updateTotal(amount);
-
+      // Reset form
       document.getElementById("amount").value = "";
       document.getElementById("date").value = "";
       document.getElementById("type").value = "";
-      document.getElementById("customTypeGroup").style.display = "none";
       document.getElementById("customType").value = "";
+      document.getElementById("customTypeGroup").style.display = "none";
     }
 
-    function deleteRow(btn, amount) {
-      const row = btn.parentNode.parentNode;
-      tableBody.removeChild(row);
-      updateTotal(-amount);
+    function deleteEntry(index) {
+      entries.splice(index, 1);
+      localStorage.setItem("savingsData", JSON.stringify(entries));
+      renderAll();
     }
 
-    let total = 0;
-    function updateTotal(change) {
-      total += change;
-      totalDisplay.textContent = `Total Saved: ₹${total}`;
+    function renderAll() {
+      entriesDiv.innerHTML = "";
+      total = 0;
+
+      entries.forEach((entry, index) => {
+        total += entry.amount;
+
+        const div = document.createElement("div");
+        div.className = "list-entry";
+        div.innerHTML = `
+          <div>
+            <div><strong>₹${entry.amount}</strong></div>
+            <small>${entry.date} - ${entry.type}</small>
+          </div>
+          <button class="delete-btn" onclick="deleteEntry(${index})">Delete</button>
+        `;
+        entriesDiv.appendChild(div);
+      });
+
+      totalDisplay.textContent = `₹${total}`;
     }
+
+    renderAll();
   </script>
 </body>
 
